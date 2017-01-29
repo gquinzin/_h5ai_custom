@@ -3,6 +3,10 @@
     right: 0;
 }
 
+#topbar #search input {
+	width: 250px;
+}
+
 #topbar #backlink {
 	display: none;
 }

@@ -1,10 +1,5 @@
 <?php
-
-// $ds contains the total number of bytes available on "/"
-// $ds = disk_free_space("/");
-
-// On Windows:
-$dfs = disk_free_space("C:");
-
-echo $dfs;
+//$dts = disk_free_space("C:");
+$dts = disk_free_space("/home");
+echo $dts;
 ?>
