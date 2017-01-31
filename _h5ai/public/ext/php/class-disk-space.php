@@ -1,8 +1,8 @@
 <?php
 
     $diskSpace = new DiskSpace();
-    $free = $diskSpace->get_free_space("C:");
-    $total = $diskSpace->get_total_space("C:");
+    $free = $diskSpace->get_free_space("/home");
+    $total = $diskSpace->get_total_space("/home");
 
     echo "{\"free\": ". $free .", \"total\": ". $total ."}";
 
