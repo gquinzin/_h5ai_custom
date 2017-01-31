@@ -23,12 +23,16 @@
     "resources": {
         "scripts": [
             "js/jquery-3.1.1.min.js",
+            "js/jquery.contextMenu.min.js",
+            "js/jquery.ui.position.min.js",
             "js/custom.js"
+
         ],
         "styles": [
             "//fonts.googleapis.com/css?family=Ubuntu:300,400,700%7CUbuntu+Mono:400,700",
-            "css/custom.css"
-            ]
+            "css/custom.css",
+            "css/jquery.contextMenu.css"
+        ]
     },
 
 
@@ -162,8 +166,8 @@
     - type: string, "php" (sloooow) or "shell-du" (sloow)
     */
     "foldersize": {
-        "enabled": false,
-        "type": "php"
+        "enabled": true,
+        "type": "shell-du"
     },
 
     /*
@@ -325,7 +329,7 @@
     "select": {
         "enabled": true,
         "clickndrag": false,
-        "checkboxes": true
+        "checkboxes": false
     },
 
     /*

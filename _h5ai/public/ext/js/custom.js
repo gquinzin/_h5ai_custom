@@ -1,24 +1,26 @@
 $(document).ready(function(){
-	setTimeout(function(){ getDiskSpace(); }, 500);
+	setTimeout(function(){ 
+		getDiskSpace(); 
+		initContextMenu();
+	}, 500);
 });
 
 function getDiskSpace(){
 	var freeSpace = 0;
 	var totalSpace = 0;
-	$.post('/_h5ai/public/ext/php/free-space-command.php', { }, function(result) { 
-	   freeSpace = bytesToSize(result); 
-	   $.post('/_h5ai/public/ext/php/total-space-command.php', { }, function(result) { 
-		   totalSpace = bytesToSize(result); 
+	var usedSpace = 0;
+	$.post('/_h5ai/public/ext/php/class-disk-space.php', { }, function(result) {
+		result = JSON.parse(result); 
+	   	freeSpace = bytesToSize(result.free); 
+	   	totalSpace = bytesToSize(result.total); 
+		usedSpace = totalSpace - freeSpace;
 
-		   var usedSpace = totalSpace - freeSpace;
+	   	var percent = Math.round(usedSpace / totalSpace * 100, 2);
 
-		   var percent = Math.round(usedSpace / totalSpace * 100, 2);
-
-		   	$("#disk-space-progress-bar").attr("aria-valuenow", percent);
-		   	$("#disk-space-progress-bar").width(percent + "%");
-			$("#disk-space-progress-bar").text(percent + " %");
-			$("#disk-space-progress-bar-label").text("Espace utilisé: " + usedSpace + " GB / " + totalSpace + " GB (" + freeSpace + " GB restants)" );
-		});
+	   	$("#disk-space-progress-bar").attr("aria-valuenow", percent);
+	   	$("#disk-space-progress-bar").width(percent + "%");
+		$("#disk-space-progress-bar").text(percent + " %");
+		$("#disk-space-progress-bar-label").text("Espace utilisé: " + usedSpace + " GB / " + totalSpace + " GB (" + freeSpace + " GB restants)" );
 	});
 }
 
@@ -27,3 +29,42 @@ function bytesToSize(bytes) {
    var i = 3 //Convert Bytes to GigaBytes;
    return Math.round(bytes / Math.pow(1024, i), 2);
 };
+
+function deleteFiles(target) {
+	$.post('/_h5ai/public/ext/php/class-delete.php', { target: target }, function(result) {
+		jsonResult = JSON.parse(result);
+		if(jsonResult.deleted){
+			location.reload();
+		} 
+	});
+}
+
+function initContextMenu() {
+	$.contextMenu({
+        selector: '#items .item', 
+        items: {
+            //"newfolder": {name: "Nouveau dossier", icon: "addfolder"},
+            //"newfile": {name: "Ajouter un fichier", icon: "addfile"},
+            //"separateur1": "---------",
+            "delete": {name: "Supprimer", icon: "delete", 
+            	callback: function(key, options) {
+		        	if(key == "delete"){
+		    			var target = $(options.$trigger[0]).find("a").attr("href");
+		        		deleteFiles(target);
+		        	}
+		        }
+		    },
+            //"rename": {name: "Renommer", icon: "rename"},
+            "separateur2": "---------",
+            "download": {name: "Télécharger", icon: "download", 
+            	callback: function(key, options) {
+		        	if(key == "delete"){
+		    			var target = $(options.$trigger[0]).find("a").attr("href");
+		        		//downloadFiles(target);
+		        	}
+		        }
+        	}
+        }
+    });
+
+}
