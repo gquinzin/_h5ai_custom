@@ -95,7 +95,7 @@ function renameFile(target){
 
 function initContextMenu() {
 	$.contextMenu({
-        selector: '#items .item', 
+        selector: '#items li:not(".folder-parent")', 
         items: {
             //"newfolder": {name: "Nouveau dossier", icon: "addfolder"},
             //"newfile": {name: "Ajouter un fichier", icon: "addfile"},
