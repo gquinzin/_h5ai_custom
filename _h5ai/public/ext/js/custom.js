@@ -39,6 +39,36 @@ function deleteFiles(target) {
 	});
 }
 
+function isFile(pathname) {
+    return pathname
+        .split('/').pop()
+        .split('.').length > 1;
+}
+
+function downloadFiles(target) {
+	var params = { _action: "download", _as: "archive.zip", _type: "shell-zip", _baseHref: target, _hrefs: "" };
+	
+	if(isFile(target)){
+		params._as = target.split('/').pop();
+	} else {
+		params._as = target.split('/')[target.split('/').length - 2] + ".zip";
+	}
+
+	var resource = "?";
+
+    $("#downloadFormPoster").remove();
+     $("<div id='downloadFormPoster' style='display: none;'><iframe name='downloadFormPosterIframe'></iframe></div>").appendTo('body');
+     $("<form action='" + resource + "' target='downloadFormPosterIframe' method='post'>" +
+      "<input type='hidden' name='action' value='" + params._action + "'/>" +
+      "<input type='hidden' name='as' value='" + params._as + "'/>" +
+      "<input type='hidden' name='type' value='" + params._type + "'/>" +
+      "<input type='hidden' name='baseHref' value='" + params._baseHref + "'/>" +
+      "<input type='hidden' name='hrefs' value='" + params._hrefs + "'/>" +
+      "</form>")
+      .appendTo("#downloadFormPoster")
+      .submit();
+}
+
 function initContextMenu() {
 	$.contextMenu({
         selector: '#items .item', 
@@ -58,9 +88,9 @@ function initContextMenu() {
             "separateur2": "---------",
             "download": {name: "Télécharger", icon: "download", 
             	callback: function(key, options) {
-		        	if(key == "delete"){
+		        	if(key == "download"){
 		    			var target = $(options.$trigger[0]).find("a").attr("href");
-		        		//downloadFiles(target);
+		        		downloadFiles(target);
 		        	}
 		        }
         	}
