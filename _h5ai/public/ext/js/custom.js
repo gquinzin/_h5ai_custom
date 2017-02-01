@@ -49,7 +49,8 @@ function downloadFiles(target) {
 	var params = { _action: "download", _as: "archive.zip", _type: "shell-zip", _baseHref: target, _hrefs: "" };
 	
 	if(isFile(target)){
-		params._as = target.split('/').pop();
+		window.open(target, '_blank');
+		return;
 	} else {
 		params._as = target.split('/')[target.split('/').length - 2] + ".zip";
 	}
