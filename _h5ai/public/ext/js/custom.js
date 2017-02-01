@@ -49,25 +49,48 @@ function downloadFiles(target) {
 	var params = { _action: "download", _as: "archive.zip", _type: "shell-zip", _baseHref: target, _hrefs: "" };
 	
 	if(isFile(target)){
-		window.open(target, '_blank');
-		return;
+	 	var link = document.createElement("a");
+		link.download = decodeURIComponent(target.split('/')[target.split('/').length - 1]);
+		link.href = target;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		delete link;
 	} else {
-		params._as = target.split('/')[target.split('/').length - 2] + ".zip";
+		params._as = decodeURIComponent(target.split('/')[target.split('/').length - 2]) + ".zip";
+		var resource = "?";
+		$("#downloadFormPoster").remove();
+		$("<div id='downloadFormPoster' style='display: none;'><iframe name='downloadFormPosterIframe'></iframe></div>").appendTo('body');
+		$("<form action='" + resource + "' target='downloadFormPosterIframe' method='post'>" +
+		"<input type='hidden' name='action' value='" + params._action + "'/>" +
+		"<input type='hidden' name='as' value='" + params._as + "'/>" +
+		"<input type='hidden' name='type' value='" + params._type + "'/>" +
+		"<input type='hidden' name='baseHref' value='" + params._baseHref + "'/>" +
+		"<input type='hidden' name='hrefs' value='" + params._hrefs + "'/>" +
+		"</form>")
+		.appendTo("#downloadFormPoster")
+		.submit();
+  	}		
+}
+
+function renameFile(target){
+	var fileName;
+	if(isFile(target)){
+		fileName = decodeURIComponent(target.split('/')[target.split('/').length - 1]);
+		fileName = fileName.substring(0, fileName.lastIndexOf("."));
+	} else {
+		fileName = decodeURIComponent(target.split('/')[target.split('/').length - 2]);
 	}
 
-	var resource = "?";
-
-    $("#downloadFormPoster").remove();
-     $("<div id='downloadFormPoster' style='display: none;'><iframe name='downloadFormPosterIframe'></iframe></div>").appendTo('body');
-     $("<form action='" + resource + "' target='downloadFormPosterIframe' method='post'>" +
-      "<input type='hidden' name='action' value='" + params._action + "'/>" +
-      "<input type='hidden' name='as' value='" + params._as + "'/>" +
-      "<input type='hidden' name='type' value='" + params._type + "'/>" +
-      "<input type='hidden' name='baseHref' value='" + params._baseHref + "'/>" +
-      "<input type='hidden' name='hrefs' value='" + params._hrefs + "'/>" +
-      "</form>")
-      .appendTo("#downloadFormPoster")
-      .submit();
+	UIkit.modal.prompt("Nom:", fileName, function(newvalue){
+    	$.post('/_h5ai/public/ext/php/class-rename.php', { target: target, fileName:fileName, newvalue: newvalue }, function(result) {
+			jsonResult = JSON.parse(result);
+			if(jsonResult.renamed){
+				location.reload();
+			} 
+		});
+	}, 
+	{labels: {'Ok': 'Renommer', 'Cancel': 'Annuler'}});
 }
 
 function initContextMenu() {
@@ -85,7 +108,14 @@ function initContextMenu() {
 		        	}
 		        }
 		    },
-            //"rename": {name: "Renommer", icon: "rename"},
+            "rename": {name: "Renommer", icon: "rename", 
+            	callback: function(key, options) {
+		        	if(key == "rename"){
+		    			var target = $(options.$trigger[0]).find("a").attr("href");
+		        		renameFile(target);
+		        	}
+		        }
+		    },
             "separateur2": "---------",
             "download": {name: "Télécharger", icon: "download", 
             	callback: function(key, options) {

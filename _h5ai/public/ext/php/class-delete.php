@@ -1,8 +1,10 @@
 <?php
     if(isset($_POST['target'])){
         $filePath = urldecode ($_POST['target']);
+
         $delete = new Delete();
         $delete->delete_files("C:/wamp/www/gilles-quinzin" . $filePath );
+        //$delete->delete_files("/home/downloader" . $filePath );
 
         echo "{\"deleted\": true}";
     }

@@ -1,3 +1,7 @@
+#toolbar .tool img {
+    box-sizing: content-box;
+}
+
 #topbar #search {
 	position: absolute;
     right: 0;

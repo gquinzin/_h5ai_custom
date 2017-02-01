@@ -25,11 +25,13 @@
             "js/jquery-3.1.1.min.js",
             "js/jquery.contextMenu.min.js",
             "js/jquery.ui.position.min.js",
+            "js/uikit.min.js",
             "js/custom.js"
 
         ],
         "styles": [
             "//fonts.googleapis.com/css?family=Ubuntu:300,400,700%7CUbuntu+Mono:400,700",
+            "css/uikit.min.css",
             "css/custom.css",
             "css/jquery.contextMenu.css"
         ]
@@ -134,7 +136,7 @@
         "enabled": true,
         "type": "shell-zip",
         "packageName": null,
-        "alwaysVisible": true
+        "alwaysVisible": false
     },
 
     /*
