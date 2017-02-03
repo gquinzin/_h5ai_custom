@@ -84,7 +84,7 @@ function renameFile(target){
 		fileName = decodeURIComponent(target.split('/')[target.split('/').length - 2]);
 	}
 
-	UIkit.modal.prompt("Nom:", fileName, function(newValue){
+	var promp = UIkit.modal.prompt("Nom:", fileName, function(newValue){
     	$.post('/_h5ai/public/ext/php/class-rename.php', { target: target, fileName:fileName, newValue: newValue }, function(result) {
 			jsonResult = JSON.parse(result);
 			if(jsonResult.renamed){
@@ -95,6 +95,27 @@ function renameFile(target){
 		});
 	}, 
 	{labels: {'Ok': 'Renommer', 'Cancel': 'Annuler'}});
+
+	promp.find("input").on("keyup", function(){
+		if(!nameIsValid($(this).val())){
+			$(this).css("border-color", "red");
+			if($('.prompt-invalid-message').length == 0){
+				$(this).parents(".uk-modal-content").append("<p class='prompt-invalid-message'>Un nom de fichier ne peut pas conternir les caratères suivants \\ / : * ? \" < > |</p>")
+			}
+			$(this).parents(".uk-modal-dialog").find(".js-modal-ok").prop("disabled", true);
+		} else {
+			$(this).css("border-color", "#ddd");
+			$('.prompt-invalid-message').remove();
+			$(this).parents(".uk-modal-dialog").find(".js-modal-ok").removeAttr("disabled");
+		}
+	});
+}
+
+function nameIsValid(fname){
+  	var rg1=/^[^\\/:\*\?"<>\|]+$/; // forbidden characters \ / : * ? " < > |
+  	var rg2=/^\./; // cannot start with dot (.)
+    
+	return rg1.test(fname)&&!rg2.test(fname);
 }
 
 function initContextMenu() {

@@ -48,3 +48,8 @@
 .progress-bar-label {
 	text-align:  center;
 }
+
+.prompt-invalid-message {
+    margin-top: 2px;
+    color: red;
+}
