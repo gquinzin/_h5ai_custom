@@ -7,6 +7,10 @@
         //$delete->delete_files("/home/downloader" . $filePath );
 
         echo "{\"deleted\": true}";
+    } 
+    else 
+    {
+        echo "{\"deleted\": false}";
     }
 
     class Delete {

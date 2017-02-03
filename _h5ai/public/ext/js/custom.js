@@ -35,7 +35,9 @@ function deleteFiles(target) {
 		jsonResult = JSON.parse(result);
 		if(jsonResult.deleted){
 			location.reload();
-		} 
+		}  else {
+			UIkit.notify("<div class='uk-text-center'>Echec lors de la suppression</div>", {status:'danger'});
+		}
 	});
 }
 
@@ -82,12 +84,14 @@ function renameFile(target){
 		fileName = decodeURIComponent(target.split('/')[target.split('/').length - 2]);
 	}
 
-	UIkit.modal.prompt("Nom:", fileName, function(newvalue){
-    	$.post('/_h5ai/public/ext/php/class-rename.php', { target: target, fileName:fileName, newvalue: newvalue }, function(result) {
+	UIkit.modal.prompt("Nom:", fileName, function(newValue){
+    	$.post('/_h5ai/public/ext/php/class-rename.php', { target: target, fileName:fileName, newValue: newValue }, function(result) {
 			jsonResult = JSON.parse(result);
 			if(jsonResult.renamed){
 				location.reload();
-			} 
+			}  else {
+				UIkit.notify("<div class='uk-text-center'>Echec lors du renommage</div>", {status:'danger'});
+			}
 		});
 	}, 
 	{labels: {'Ok': 'Renommer', 'Cancel': 'Annuler'}});
